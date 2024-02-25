@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Signup from "./pages/signup"
 import Signin from "./pages/signin"
 import Dashboard from "./pages/Dashboard"
-import Send from "./pages/send"
+import Send from './pages/Send'
 
 function App() {
 
