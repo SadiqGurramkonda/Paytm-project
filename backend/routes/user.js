@@ -104,7 +104,7 @@ router.get('/siginin',async(req,res)=>{
 })
 
 router.get('/bulk',async(req,res)=>{
-    const filter = req.query.filter.trim() || "";
+    const filter = req.query.filter?req.query.filter.trim(): "" || "";
     //console.log(req.query.filter)
     const users = await User.find({
         $or: [{
@@ -120,13 +120,12 @@ router.get('/bulk',async(req,res)=>{
         ]
     })
     res.json({
-        users: [
+        users: 
             users.map((user)=>({
-                username: user.username,
+                userId: user._id,
                 firstname: user.firstname,
                 lastname: user.lastname
             }))
-        ]
     })
 })
 module.exports = router;

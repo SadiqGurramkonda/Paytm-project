@@ -1,4 +1,19 @@
+import axios from "axios";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom"
+
+
 export default function SendMoney(){
+
+    const [amount, setAmount] = useState(0);
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get("id");
+    const toPersonName = searchParams.get("name");
+
+    console.log(amount,id,toPersonName);
+    console.log(localStorage.getItem("token"))
+
+
     return <div class="flex justify-center h-screen bg-gray-100">
         <div className="h-full flex flex-col justify-center">
             <div
@@ -12,12 +27,12 @@ export default function SendMoney(){
                     <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
                     <span class="text-2xl text-white">A</span>
                     </div>
-                    <h3 class="text-2xl font-semibold">Friend's Name</h3>
+                    <h3 class="text-2xl font-semibold">{toPersonName}</h3>
                 </div>
                 <div class="space-y-4">
                     <div class="space-y-2">
                     <label
-                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         for="amount"
                     >
                         Amount (in Rs)
@@ -27,9 +42,20 @@ export default function SendMoney(){
                         class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                         id="amount"
                         placeholder="Enter amount"
+                        onChange={(e)=>setAmount(parseInt(e.target.value))}
                     />
                     </div>
-                    <button class="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
+                    <button onClick={()=>{
+                        axios.post("//localhost:3000/api/v1/account/transfer",{
+                            to: id,
+                            amount: amount
+                            
+                        },{
+                            headers: {
+                                Authorization: "Bearer " + localStorage.getItem("token")
+                            }
+                        })
+                    }} class="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white">
                         Initiate Transfer
                     </button>
                 </div>
