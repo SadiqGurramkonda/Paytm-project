@@ -3,6 +3,7 @@ const zod = require('zod');
 const jwt = require('jsonwebtoken');
 const { User, Account} = require('../db');
 const { JWT_SECRET } = require('../config');
+const { authMiddleware } = require('../middleware');
 const router = express.Router();
 
 const signupBody = zod.object({
@@ -73,9 +74,9 @@ router.post('/signup',async(req,res)=>{
     };
 });
 
-router.get('/siginin',async(req,res)=>{
+router.get('/siginin', async(req,res)=>{
     const sigininDetails = req.body;
-    console.log(req.body);
+    //console.log(req.body);
     const {success} = signinBody.safeParse(sigininDetails);
     if(!success){
         res.status(411).json({
@@ -103,9 +104,10 @@ router.get('/siginin',async(req,res)=>{
     })
 })
 
-router.get('/bulk',async(req,res)=>{
+router.get('/bulk', authMiddleware,async(req,res)=>{
     const filter = req.query.filter?req.query.filter.trim(): "" || "";
     //console.log(req.query.filter)
+    //console.log(req.userId);
     const users = await User.find({
         $or: [{
             firstname: {
@@ -118,14 +120,18 @@ router.get('/bulk',async(req,res)=>{
             }
         }
         ]
-    })
+    });
     res.json({
-        users: 
-            users.map((user)=>({
-                userId: user._id,
-                firstname: user.firstname,
-                lastname: user.lastname
-            }))
+        users:
+            users.map((user) => {
+                if (!JSON.stringify(user._id).includes(req.userId)) {
+                    return ({
+                        userId: user._id,
+                        firstname: user.firstname,
+                        lastname: user.lastname
+                    })
+                };
+            }).filter(user=>user)
     })
 })
 module.exports = router;

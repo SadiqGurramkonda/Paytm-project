@@ -22,7 +22,11 @@ export const Users = ()=>{
     }
      useEffect(()=>{
 
-        axios.get("//localhost:3000/api/v1/user/bulk?filter=" + filter).then((response)=>{
+        axios.get("//localhost:3000/api/v1/user/bulk?filter=" + filter,{
+            headers:{
+                Authorization: "Bearer "+ localStorage.getItem("token")
+            }
+        }).then((response)=>{
             setUsers(response.data.users)
         })
      },[filter]);
@@ -42,7 +46,7 @@ export const Users = ()=>{
 function User({user}){
 
     const navigate = useNavigate();
-    console.log(user._id);
+    //console.log(user._id);
 
     return(
         <div className="flex justify-between">
@@ -59,9 +63,11 @@ function User({user}){
                         </div>
                     </div>
             <div className="flex flex-col justify-center h-full">
-                <Button onClick={()=>{
-                    navigate("/send?id="+user.userId+"&name="+user.firstname);
-                }} label={"Send money"}></Button>    
+                <div className="mt-2">
+                    <Button onClick={() => {
+                        navigate("/send?id=" + user.userId + "&name=" + user.firstname);
+                    }} label={"Send money"}></Button>
+                </div>
             </div>
         </div>
     )
