@@ -25,7 +25,7 @@ export default function SendMoney(){
                 <div class="p-6">
                 <div class="flex items-center space-x-4">
                     <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
-                    <span class="text-2xl text-white">A</span>
+                    <span class="text-2xl text-white">{toPersonName[0].toUpperCase()}</span>
                     </div>
                     <h3 class="text-2xl font-semibold">{toPersonName}</h3>
                 </div>
@@ -33,8 +33,7 @@ export default function SendMoney(){
                     <div class="space-y-2">
                     <label
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        for="amount"
-                    >
+                        for="amount">
                         Amount (in Rs)
                     </label>
                     <input

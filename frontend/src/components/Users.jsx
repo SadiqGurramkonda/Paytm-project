@@ -8,8 +8,20 @@ export const Users = ()=>{
     const [users, setUsers] = useState([]);
     const [filter,setFilter] = useState("");
 
-    //add debaouncing logic to limit get requests trigerring
+    //add debaouncing logic to limit get requests trigerring:
+
+    function setRateLimit(fn,delay){
+
+        let timerId;
+
+        clearTimeout(timerId);
+
+        timerId = setTimeout(() => {
+            fn()
+        },delay );
+    }
      useEffect(()=>{
+
         axios.get("//localhost:3000/api/v1/user/bulk?filter=" + filter).then((response)=>{
             setUsers(response.data.users)
         })
@@ -19,7 +31,7 @@ export const Users = ()=>{
             Users
         </div>
         <div className="my-2">
-            <input onChange={(e)=>setFilter(e.target.value)} type="text" placeholder="Search for users..." className="w-full px-2 py-1 border rounded border-slate-200"></input>
+            <input onChange={(e)=>setRateLimit(()=>{setFilter(e.target.value)},1000)} type="text" placeholder="Search for users..." className="w-full px-2 py-1 border rounded border-slate-200"></input>
         </div>
         <div>
             {users.map((user)=><User key={user.username} user={user}></User>)}
@@ -27,7 +39,6 @@ export const Users = ()=>{
     </>
     )
 }
-
 function User({user}){
 
     const navigate = useNavigate();
@@ -38,7 +49,7 @@ function User({user}){
             <div className="flex">
                 <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
                     <div className="flex flex-col justify-center text-xl">
-                        {user.firstname[0]}
+                        {user.firstname[0].toUpperCase()}
                         </div>
                         </div>
                         <div className="flex flex-col justify-center h-full">
