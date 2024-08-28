@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 async function connectToMongodb(){
     try{
-        mongoose.connect('mongodb+srv://Sadiq:sadiq111@cluster0.dbq0pen.mongodb.net/paytm');
+        await mongoose.connect('mongodb+srv://Sadiq:sadiq111@cluster0.dbq0pen.mongodb.net/paytm');
         console.log('Database connected...');
     }
     catch(err){
-        console.log(err)
+        console.log("from db.js: "+err);
     }
 }
 
